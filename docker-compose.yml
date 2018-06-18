@@ -1,0 +1,48 @@
+version: '3'
+services:
+  postgres:
+      image: postgres
+      deploy:
+        restart_policy:
+          condition: any
+          #delay: 5s
+          #max_attempts: 3
+          #window: 120s
+      environment:
+        POSTGRES_USER: data36
+        POSTGRES_PASSWORD: data36
+      networks:
+        - main-network
+      #command:
+
+  pgadmin:
+    image: fenglc/pgadmin4
+    ports:
+      - "5050:5050"
+    depends_on:
+      - postgres
+    deploy:
+      restart_policy:
+        condition: any
+    environment:
+      DEFAULT_USER: data36
+      DEFAULT_PASSWORD: data36
+    networks:
+      - main-network
+    #command:
+
+  jupyterlab:
+    image: jupyter/datascience-notebook
+    ports:
+      - "8888:8888"
+    deploy:
+      restart_policy:
+        condition: any
+    #environment:
+    #command: start.sh jupyter lab
+    networks:
+      - main-network
+    entrypoint: start.sh jupyter lab
+
+networks:
+  main-network:
